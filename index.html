@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>noise</title>
+  <meta charset="UTF-8">
+  <title>noise</title>
 </head>
 <script>
 function startJS() {
-	var numChannels = 1;
-	var bufferSize = 44100 * 100;
-	var audioCtx;
-	var checkBox = document.getElementById("theCheck");
+  var numChannels = 1;
+  var bufferSize = 44100 * 100;
+  var audioCtx;
+  var checkBox = document.getElementById("theCheck");
 
-	checkBox.onclick=function(){
-		if (checkBox.checked === false) {
-			console.log("I'm turning it off!");
-			audioCtx.close();
-		} else {
-			console.log("I'm turning it on!");
-			audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  checkBox.onclick=function(){
+    if (checkBox.checked === false) {
+      console.log("I'm turning it off!");
+      audioCtx.close();
+    } else {
+      console.log("I'm turning it on!");
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-			audioCtx.sampleRate = 11025;
+      audioCtx.sampleRate = 11025;
 
-			var myArrayBuffer = audioCtx.createBuffer(
-				numChannels, bufferSize, audioCtx.sampleRate
-			);
-			var gainNode = audioCtx.createGain();
-			var biquadFilter = audioCtx.createBiquadFilter();
-			biquadFilter.type = 'lowpass';
+      var myArrayBuffer = audioCtx.createBuffer(
+        numChannels, bufferSize, audioCtx.sampleRate
+      );
+      var gainNode = audioCtx.createGain();
+      var biquadFilter = audioCtx.createBiquadFilter();
+      biquadFilter.type = 'lowpass';
 
-			var frameCount = bufferSize;
+      var frameCount = bufferSize;
 
-			// Fill the buffer with white noise;
-			var nowBuffering = myArrayBuffer.getChannelData(0);
-			for (var i = 0; i < frameCount; i++) {
-				// Math.random() is in [0; 1.0]
-				// audio needs to be in [-1.0; 1.0]
-				nowBuffering[i] = Math.random() * 2 - 1;
-			}
+      // Fill the buffer with white noise;
+      var nowBuffering = myArrayBuffer.getChannelData(0);
+      for (var i = 0; i < frameCount; i++) {
+        // Math.random() is in [0; 1.0]
+        // audio needs to be in [-1.0; 1.0]
+        nowBuffering[i] = Math.random() * 2 - 1;
+      }
 
-			// Get an AudioBufferSourceNode.
-			// This is the AudioNode to use when we want to play an AudioBuffer
-			var source = audioCtx.createBufferSource();
-			// set the buffer in the AudioBufferSourceNode
-			source.buffer = myArrayBuffer;
-			//create a gain control
-			source.connect(gainNode);
-			gainNode.connect(biquadFilter);
+      // Get an AudioBufferSourceNode.
+      // This is the AudioNode to use when we want to play an AudioBuffer
+      var source = audioCtx.createBufferSource();
+      // set the buffer in the AudioBufferSourceNode
+      source.buffer = myArrayBuffer;
+      //create a gain control
+      source.connect(gainNode);
+      gainNode.connect(biquadFilter);
 
-			//start the gain at 0
-			gainNode.gain.value = 0;
-			// connect the gain to the final output
-			biquadFilter.connect(audioCtx.destination);		// start the source playing
-			// loop the audio
-			source.loop = true;
-			// start the (initially silent) white noise
-			source.start();
-			biquadFilter.frequency.value = 200;
-			biquadFilter.Q = 30;
+      //start the gain at 0
+      gainNode.gain.value = 0;
+      // connect the gain to the final output
+      biquadFilter.connect(audioCtx.destination);    // start the source playing
+      // loop the audio
+      source.loop = true;
+      // start the (initially silent) white noise
+      source.start();
+      biquadFilter.frequency.value = 200;
+      biquadFilter.Q = 30;
 
-			gainNode.gain.value = 3;
-		}
-	}
+      gainNode.gain.value = 3;
+    }
+  }
 }
 
 </script>
@@ -68,9 +68,9 @@ function startJS() {
 <style>
 /* The switch - the box around the slider */
 .switch {
-	position: auto 0;
-	width: 90vw;
-	height: 50vh;
+  position: auto 0;
+  width: 90vw;
+  height: 50vh;
 }
 
 /* Hide default HTML checkbox */
@@ -78,52 +78,52 @@ function startJS() {
 
 /* The slider */
 .slider {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: darkgrey;
-	-webkit-transition: .7s;
-	transition: .7s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: darkgrey;
+  -webkit-transition: .7s;
+  transition: .7s;
 }
 
 .slider:before {
-	position: absolute;
-	content: "";
-	height: 99vh;
-	width: 50vw;
-	left: 1vw;
-	bottom: 4px;
-	background-color: black;
-	-webkit-transition: .7s;
-	transition: .7s;
+  position: absolute;
+  content: "";
+  height: 99vh;
+  width: 50vw;
+  left: 1vw;
+  bottom: 4px;
+  background-color: black;
+  -webkit-transition: .7s;
+  transition: .7s;
 }
 
 input:checked + .slider {
-	background-color: grey;
+  background-color: grey;
 }
 
 input:focus + .slider {
-	box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #2196F3;
 }
 
 input:checked + .slider:before {
-	-webkit-transform: translateX(48vw);
-	-ms-transform: translateX(48vw);
-	transform: translateX(48vw);
+  -webkit-transform: translateX(48vw);
+  -ms-transform: translateX(48vw);
+  transform: translateX(48vw);
 }
 
 </style>
 <body onload="startJS()">
 
-	<label class="switch">
+  <label class="switch">
 
-		<input type="checkbox" id="theCheck">
+    <input type="checkbox" id="theCheck">
 
-		<div class="slider"></div>
+    <div class="slider"></div>
 
-	</label>
+  </label>
 
 </body>
 
